@@ -42,18 +42,18 @@ public class GameBoardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 boardTexture.SetPixel(x, y, Color.grey);
             }
         }
+        boardTexture.filterMode = FilterMode.Point;
         boardTexture.Apply();
+        
 
         if (boardImage == null) {
             boardImage = GetComponent<RawImage>();
         }
 
         boardImage.texture = boardTexture;
+        boardImage.material.mainTexture = boardTexture;
 
         boardRectTransform = gameObject.GetComponent<RectTransform>();
-        //GetComponent<>().mainTexture = boardTexture;
-        //GetComponent<CanvasRenderer>().GetMaterial().mainTexture = boardTexture;
-        boardImage.material.mainTexture = boardTexture;
     }
 
     // Use this for initialization
@@ -115,32 +115,22 @@ public class GameBoardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     }
 
     public void OnDrag(PointerEventData eventData) {
-        //throw new System.NotImplementedException();
-        //eventData.position
-        //Debug.Log("Dragging: " + eventData.position.ToString());
-
         Vector2 localPoint;
         int x, y;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(boardRectTransform, eventData.pointerCurrentRaycast.screenPosition, eventData.pressEventCamera, out localPoint);
 
-        //Debug.Log("EventPoint: " + eventData.pointerCurrentRaycast.screenPosition.ToString());
-        //Debug.Log("LocalPoint: " + localPoint.ToString());
-        //Debug.Log("LocalPoint: " + (localPoint/boardRectTransform.rect.size).ToString());
         x = Mathf.FloorToInt((localPoint.x / boardRectTransform.rect.width) * BoardSize) + (BoardSize / 2);
         y = Mathf.FloorToInt((localPoint.y / boardRectTransform.rect.height) * BoardSize) + (BoardSize / 2);
-        Debug.Log(string.Format("Index: ( {0}, {1} )", x, y));
 
         boardTexture.SetPixel(x, y, Color.black);
         boardTexture.Apply();
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
-        //throw new System.NotImplementedException();
-        Debug.Log("Begin Drag " + eventData.position.ToString());
+
     }
 
     public void OnEndDrag(PointerEventData eventData) {
-        //throw new System.NotImplementedException();
-        Debug.Log("End Drag " + eventData.position.ToString());
+
     }
 }
