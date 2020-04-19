@@ -7,6 +7,14 @@ public class GameCellScript {
 
     public int CurrentValue {
         get { return State ? _value1 : _value2; }
+        set {
+            if (State) {
+                _value1 = value;
+            }
+            else {
+                _value2 = value;
+            }
+        }
     }
     public int NextValue {
         get { return State ? _value2 : _value1; }

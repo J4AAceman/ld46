@@ -96,9 +96,13 @@ public class GameBoardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 if (j < boardArray.Count - 1)
                     adjacentLives += boardArray[i][j + 1].CurrentValue > 0 ? 1 : 0;
 
-                boardArray[i][j].NextValue = adjacentLives >= 2 ? 1 : 0;
+                boardArray[i][j].NextValue = adjacentLives == 2 ? 1 : 0;
+
+                // TODO: some sort of translation from value to a color
+                boardTexture.SetPixel(i, j, boardArray[i][j].NextValue > 0 ? Color.black : Color.grey);
             }
         }
+        boardTexture.Apply();
 
         // Toggle active state
         GameCellScript.State = !GameCellScript.State;
@@ -107,6 +111,7 @@ public class GameBoardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     public void OnPointerDown(PointerEventData eventData) {
         //throw new System.NotImplementedException();
         //Debug.Log("Pointer Down " + eventData.position.ToString());
+        SetGameCell(eventData);
     }
 
     public void OnPointerUp(PointerEventData eventData) {
@@ -115,6 +120,50 @@ public class GameBoardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     }
 
     public void OnDrag(PointerEventData eventData) {
+        SetGameCell(eventData);
+    }
+
+    public void OnBeginDrag(PointerEventData eventData) {
+        SetGameCell(eventData);
+    }
+
+    public void OnEndDrag(PointerEventData eventData) {
+
+    }
+
+    public void Reset() {
+        shouldPlay = false;
+        // TODO: reset
+    }
+
+    public void Pause() {
+        shouldPlay = false;
+    }
+
+    public void Step( int cnt ) {
+        playSteps = cnt;
+        shouldPlay = true;
+    }
+
+    public void Play() {
+        playIndefinitely = true;
+        shouldPlay = true;
+        // TODO: playback rate
+    }
+
+    public void FastForward() {
+        playIndefinitely = true;
+        shouldPlay = true;
+        // TODO: playback rate
+    }
+
+    public void SuperFastForward() {
+        playIndefinitely = true;
+        shouldPlay = true;
+        // TODO: playback rate
+    }
+
+    private void SetGameCell(PointerEventData eventData) {
         Vector2 localPoint;
         int x, y;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(boardRectTransform, eventData.pointerCurrentRaycast.screenPosition, eventData.pressEventCamera, out localPoint);
@@ -124,13 +173,11 @@ public class GameBoardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
         boardTexture.SetPixel(x, y, Color.black);
         boardTexture.Apply();
+
+        ////////////////////////////////////////
+        // TODO: link game board to texture
+        ////////////////////////////////////////
+        boardArray[x][y].CurrentValue = 1;
     }
 
-    public void OnBeginDrag(PointerEventData eventData) {
-
-    }
-
-    public void OnEndDrag(PointerEventData eventData) {
-
-    }
 }
